@@ -1,0 +1,122 @@
+###############################################################################
+# 
+# Following configurations are loaded before the user defined vm-install 
+# configuration -
+# 1. ~/.vm-install-secret.conf - You can store your vCenter.password here
+# 2. ./vm-install-default.conf - Most of the default configuration are here
+###############################################################################
+[build]
+version=6.1.0
+build_number=10390
+branch=EC_INTEG
+
+[install_images]
+host=10.106.134.200
+# Austin Build Filer
+#host=ast-stg-fs01.cisco.com
+# SJ Build Filer
+#host=ast-stg-fs01.cisco.com
+#basedir=/netboot/ims
+
+[vCenter]
+host=bgl-vc01.cisco.com
+user=CISCO\sumpande
+resource_pool=BGL-GCP-Users/BGL1006 - sumpande
+datacenter=Bangalore-GCP-PODs
+cluster_path=BGL-GCP-PODS-Cluster
+folder=1. GCP Feature PODS/Users/BGL1006 - sumpande
+datastore=GCP-PODs-Storage-Cluster
+esx_ip=
+ovf.esxi4.compatiblity.force=no
+
+########### Default VM defintions ################
+[default.vm]
+#vm.prefix=vs-
+
+# Default for DC VM
+[default.vm.dc]
+net.Management=BGL1006-MGMT-1258
+
+# These propoerties are defined in ovf, therefore should match the requirement of ovf
+prop.pw=Admin123
+prop.ipv4.how=DHCP
+prop.ipv4.mask=255.255.255.0
+prop.ipv4.gw=192.168.0.254
+prop.dns1=72.163.128.140
+prop.dns2=10.104.229.104
+prop.dns3=171.70.168.183
+
+# Default for FirePower VM
+[default.vm.3d]
+vm.type=fp
+overwrite=yes
+net.Management=BGL1006-MGMT-1258
+net.Internal=HOLDING
+net.External=HOLDING
+# These propoerties are defined in ovf, therefore should match the requirement of ovf
+prop.pw=Admin123
+prop.ipv4.how=Manual
+prop.ipv4.mask=255.255.255.0
+prop.ipv4.gw=192.168.0.254
+prop.dns1=72.163.128.140
+prop.dns2=10.104.229.104
+prop.dns3=171.70.168.183
+prop.fqdn={VM_ID}-v{VERSION_SHORT}b{BUILD}
+prop.mode=Inline
+prop.mgr=192.168.0.11
+prop.regkey=cisco
+#prop.regNAT=
+
+# Default for ThreatDefense VM
+[default.vm.td]
+vm.type=td
+#net.Management0-0=VM_INSIDE_NETWORK_192_168_20_XX_MASK_24
+net.Management0-0=BGL1006-MGMT-1258
+net.GigabitEthernet0-0=HOLDING
+net.GigabitEthernet0-1=HOLDING
+net.GigabitEthernet0-2=HOLDING
+overwrite=yes
+
+######### Bulk VM creation ###########
+##### Not yet implemented ############
+[bulk-vm.10FP]
+vm.type=3d
+ipv4.addr.start=
+ipv4.addr.end=
+
+######### Define the single VM Instances #############
+[vm.dc]
+vm.type=dc
+prop.ipv4.addr=192.168.0.11
+
+
+[vm.fp1]
+vm.type=3d
+prop.ipv4.addr=192.168.0.21
+prop.mgr=192.168.0.11
+prop.mode=Inline
+prop.regKey=cisco
+net.Internal=BGL1006-B-2298
+net.External=BGL1006-D-2300
+
+[vm.td1]
+vm.type=td
+vm.suffix=-(routed)
+net.GigabitEthernet0-0=BGL1006-A-2297
+net.GigabitEthernet0-1=BGL1006-MGMT-1258
+net.GigabitEthernet0-2=BGL1006-C-2299
+
+#[vm.td2]
+#vm.type=td
+#vm.suffix=-(transparent)
+#net.GigabitEthernet0-0=VM_INSIDE_NETWORK_192_168_20_XX_MASK_24
+#net.GigabitEthernet0-1=VM_INSIDE_NETWORK_192_168_20_XX_MASK_24
+
+#[vm.td3]
+#vm.type=td
+#vm.suffix=-(routed)
+
+#[vm.td4]
+#vm.type=td
+#vm.suffix=-(transparent)
+
